@@ -1,0 +1,7 @@
+#!/sbin/openrc-run
+
+depend() {
+    need docker
+}
+
+# command=/home/$USER/projects/texdocker/run-docker.sh
