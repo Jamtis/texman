@@ -19,9 +19,9 @@ fi
 
 # setup temp folder
 TEXDOCKER_FOLDER=$(readlink -f ~/texdocker)
-rm -rf $TEXDOCKER_FOLDER
-mkdir -p $TEXDOCKER_FOLDER
 CONFIG_FOLDER=$(readlink -f $TEXDOCKER_FOLDER/.config)
+rm -rf $CONFIG_FOLDER
+mkdir -p $CONFIG_FOLDER
 cp -r ./ $CONFIG_FOLDER
 cd $CONFIG_FOLDER
 
