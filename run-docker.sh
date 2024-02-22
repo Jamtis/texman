@@ -1,6 +1,7 @@
 #!/bin/bash
 
 NAME="tex_container"
+echo "move to $1"
 cd $1
 
 if docker ps -a --format '{{.Names}}' | grep -q "^$NAME$"; then
