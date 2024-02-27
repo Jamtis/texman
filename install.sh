@@ -17,26 +17,33 @@ else
     exit 126
 fi
 
-# setup temp folder
+# setup texdocker folder
 TEXDOCKER_FOLDER=$(readlink -f ~/texdocker)
+
+# setup .config folder
 CONFIG_FOLDER=$(readlink -f $TEXDOCKER_FOLDER/.config)
 rm -rf $CONFIG_FOLDER
 mkdir -p $CONFIG_FOLDER
 cp -r ./ $CONFIG_FOLDER
 cd $CONFIG_FOLDER
 
-# write password
-head /dev/urandom | tr -dc 'a-z0-9' | head -c 16 > password
+# setup settings folder
+SETTINGS_FOLDER=$(readlink -f $TEXDOCKER_FOLDER/.settings)
+rm -rf $SETTINGS_FOLDER
+mkdir -p $SETTINGS_FOLDER
+cp settings.json $SETTINGS_FOLDER
 
-# prepare service file 
+# write password
+head /dev/urandom | tr -dc 'a-z0-9' | head -c 16 > ./password
+
+# prepare service file
 SERVICE_FILE=$(readlink -f ./texdocker)
 RUN_FILE=$(readlink -f ./run-docker.sh)
 # add path to run-docker.sh to the service file
 echo "command=$RUN_FILE" >> $SERVICE_FILE
 echo "command_args='$CONFIG_FOLDER'" >> $SERVICE_FILE
 
-# su
 # prepare service symlink
 SERVICE_SYMLINK='/etc/init.d/texdocker'
-su -c "rm $SERVICE_SYMLINK ; ln -s $SERVICE_FILE $SERVICE_SYMLINK"
+su -c "rm $SERVICE_SYMLINK ; ln -s $SERVICE_FILE $SERVICE_SYMLINK ; rc-service texdocker restart"
 echo "installation succeeded"
