@@ -1,10 +1,17 @@
 #!/bin/bash
 
-NAME="tex_container"
+exec 3> /texdocker.log
+exec > >(tee -a /dev/fd/3) 2>&1
+
+CONTAINER_NAME="tex_container"
 cd $1
 
-docker stop $NAME
-# docker rm $NAME
+docker stop $CONTAINER_NAME
+
 PASSWORD=$(cat ./password)
-docker create --name $NAME --net=host -e "PASSWORD=$PASSWORD" -v $(readlink -f ../projects):/workdir nicholasbrandt/texdocker
-docker restart $NAME
+
+if ! docker ps -a --format '{{.Names}}' | grep -q "^$CONTAINER_NAME$"; then
+	docker create --name $CONTAINER_NAME --net=host -e "PASSWORD=$PASSWORD" -v $(readlink -f ../projects):/workdir nicholasbrandt/texdocker
+fi
+
+docker restart $CONTAINER_NAME
