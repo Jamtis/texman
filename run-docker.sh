@@ -10,8 +10,10 @@ docker stop $CONTAINER_NAME
 
 PASSWORD=$(cat ./password)
 
-if ! docker ps -a --format '{{.Names}}' | grep -q "^$CONTAINER_NAME$"; then
-	docker create --name $CONTAINER_NAME --net=host -e "PASSWORD=$PASSWORD" -v $(readlink -f ../projects):/workdir nicholasbrandt/texdocker
+if docker ps -a --format '{{.Names}}' | grep -q "^$CONTAINER_NAME$"; then
+	docker rm $CONTAINER_NAME
 fi
+
+docker create --name $CONTAINER_NAME --net=host -e "PASSWORD=$PASSWORD" -v $(readlink -f ../projects):/workdir nicholasbrandt/texdocker
 
 docker restart $CONTAINER_NAME
