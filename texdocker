@@ -4,4 +4,8 @@ depend() {
     need docker
 }
 
+stop() {
+    docker stop tex_container
+}
+
 # command=/home/$USER/projects/texdocker/run-docker.sh
