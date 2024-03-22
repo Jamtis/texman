@@ -4,8 +4,16 @@ depend() {
     need docker
 }
 
+start() {
+    echo "starting texdocker"
+    $command $command_args
+}
+
 stop() {
-    docker stop tex_container
+    echo "stopping texdocker"
+    if docker ps -a --format '{{.Names}}' | grep -q '^tex_container$'; then
+    	docker stop tex_container
+    fi
 }
 
 # command=/home/$USER/projects/texdocker/run-docker.sh
