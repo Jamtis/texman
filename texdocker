@@ -1,14 +1,13 @@
 #!/sbin/openrc-run
 
 start() {
-    echo "starting texdocker"
+    echo "starting texdocker.."
     su $command_user -c "$command $command_args"
 }
 
 stop() {
-    echo "stopping texdocker"
-    if podman ps -a --format '{{.Names}}' | grep -q '^tex_container$'; then
-    	    podman stop tex_container
-    fi
+    echo "stopping texdocker..."
+    podman stop tex_container
+    echo "stopped texdocker"
 }
 

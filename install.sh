@@ -37,8 +37,8 @@ install_texdocker() {
 	# setup settings folder
 	SETTINGS_FOLDER=$(readlink -f $TEXDOCKER_FOLDER/.settings)
 	sudo rm -rf $SETTINGS_FOLDER
-	mkdir -p $SETTINGS_FOLDER
-	cp settings.json $SETTINGS_FOLDER
+	# mkdir -p $SETTINGS_FOLDER
+	# cp settings.json $SETTINGS_FOLDER
 
 	# write password
 	head /dev/urandom | tr -dc 'a-z0-9' | head -c 16 > ./password
@@ -57,8 +57,20 @@ install_texdocker() {
 	sudo ln -s $SERVICE_FILE $SERVICE_SYMLINK
 	# only root should write / otherwise user could inject su code
 	sudo chmod 744 $SERVICE_FILE
+	
+    # remove existing container
+    podman stop $CONTAINER_NAME
+    podman rm $CONTAINER_NAME
+    
+    # start texdocker
 	sudo rc-service texdocker restart
 	echo "installation succeeded"
+
+    # add certificate
+    sleep 5
+    sudo rm -f /usr/local/share/ca-certificates/localhost.crt
+    sudo ln -s $SETTINGS_FOLDER/localhost.crt /usr/local/share/ca-certificates/localhost.crt
+    sudo update-ca-certificates
 }
 
 # execute
