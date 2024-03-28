@@ -23,19 +23,19 @@ install_docker() {
 	sudo usermod --add-subuids 100000-165535 --add-subgids 100000-165535 "$USER"
 }
 
-install_texdocker() {
-	# setup texdocker folder
-	TEXDOCKER_FOLDER=$(readlink -f ~/texdocker)
+install_texman() {
+	# setup texman folder
+	TEXMAN_FOLDER=$(readlink -f ~/texman)
 
 	# setup .config folder
-	CONFIG_FOLDER=$(readlink -f $TEXDOCKER_FOLDER/.config)
+	CONFIG_FOLDER=$(readlink -f $TEXMAN_FOLDER/.config)
 	sudo rm -rf $CONFIG_FOLDER
 	mkdir -p $CONFIG_FOLDER
 	cp -r ./ $CONFIG_FOLDER
 	cd $CONFIG_FOLDER
 
 	# setup settings folder
-	SETTINGS_FOLDER=$(readlink -f $TEXDOCKER_FOLDER/.settings)
+	SETTINGS_FOLDER=$(readlink -f $TEXMAN_FOLDER/.settings)
 	sudo rm -rf $SETTINGS_FOLDER
 	# mkdir -p $SETTINGS_FOLDER
 	# cp settings.json $SETTINGS_FOLDER
@@ -44,7 +44,7 @@ install_texdocker() {
 	head /dev/urandom | tr -dc 'a-z0-9' | head -c 16 > ./password
 
 	# prepare service file
-	SERVICE_FILE=$(readlink -f ./texdocker)
+	SERVICE_FILE=$(readlink -f ./texman)
 	RUN_FILE=$(readlink -f ./run-podman.sh)
 	# add path to run-docker.sh to the service file / run as user
 	echo "command=$RUN_FILE" >> $SERVICE_FILE
@@ -52,7 +52,7 @@ install_texdocker() {
 	echo "command_args=$CONFIG_FOLDER" >> $SERVICE_FILE
 
 	# prepare service symlink
-	SERVICE_SYMLINK='/etc/init.d/texdocker'
+	SERVICE_SYMLINK='/etc/init.d/texman'
 	sudo rm -f $SERVICE_SYMLINK
 	sudo ln -s $SERVICE_FILE $SERVICE_SYMLINK
 	# only root should write / otherwise user could inject su code
@@ -62,11 +62,11 @@ install_texdocker() {
     podman stop $CONTAINER_NAME
     podman rm $CONTAINER_NAME
     
-    # start texdocker
-	sudo rc-service texdocker restart
+    # start texman
+	sudo rc-service texman restart
 	echo "installation succeeded"
 
-    # add certificate
+    # TODO: add certificate
     sleep 5
     sudo rm -f /usr/local/share/ca-certificates/localhost.crt
     sudo ln -s $SETTINGS_FOLDER/localhost.crt /usr/local/share/ca-certificates/localhost.crt
@@ -74,4 +74,4 @@ install_texdocker() {
 }
 
 # execute
-install_docker && install_texdocker
+install_docker && install_texman

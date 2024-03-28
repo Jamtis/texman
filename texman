@@ -1,0 +1,15 @@
+#!/sbin/openrc-run
+
+start() {
+    echo "starting texdocker..."
+    # important to start as $USER / rootless
+    su $command_user -c "$command $command_args"
+}
+
+stop() {
+    echo "stopping texdocker..."
+    # important to stop as $USER / rootless
+    su -c $command_user -c "podman stop tex_container"
+    echo "stopped texdocker"
+}
+
