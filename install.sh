@@ -9,6 +9,8 @@ cleanup() {
 }
 trap cleanup EXIT
 
+INSTALL_PATH=${1:-~/texman}
+
 # install docker rootless
 install_docker() {
     # https://virtualzone.de/posts/alpine-docker-rootless/
@@ -25,7 +27,12 @@ install_docker() {
 
 install_texman() {
 	# setup texman folder
-	TEXMAN_FOLDER=$(readlink -f ~/texman)
+	while [ -f $INSTALL_PATH ]; do
+	    # create new folder if file already exists
+	    random_string=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 12 | head -n 1)
+        INSTALL_PATH=~/texman_$randomstring
+    done
+	TEXMAN_FOLDER=$(readlink -f $INSTALL_PATH)
 
 	# setup .config folder
 	CONFIG_FOLDER=$(readlink -f $TEXMAN_FOLDER/.config)
