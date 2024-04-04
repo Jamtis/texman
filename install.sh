@@ -71,6 +71,7 @@ install_texman() {
     
     # start texman
 	sudo rc-service texman restart
+	sudo rc-update add texman default
 	echo "installation succeeded"
 
     # TODO: add certificate

@@ -3,7 +3,9 @@
 CONTAINER_NAME="tex_container"
 cd $1
 
-echo "texdocker: run podman"
+exec &> run-podman.log
+
+echo "texman: run podman"
 
 PASSWORD=$(cat ./password)
 
