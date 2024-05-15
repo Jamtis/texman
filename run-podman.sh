@@ -19,7 +19,7 @@ INT_SETTINGS_FOLDER=/root/.local/share/code-server/
 if podman ps -a --format '{{.Names}}' | grep -q "^$CONTAINER_NAME$"; then
     echo "tex_container already exists"
 else
-    podman create --name $CONTAINER_NAME --net=host -e "PASSWORD=$PASSWORD" -v $EXT_PROJECTS_FOLDER:$INT_PROJECTS_FOLDER -v $EXT_SETTINGS_FOLDER:$INT_SETTINGS_FOLDER nicholasbrandt/texdocker
+    podman create --name $CONTAINER_NAME --net=host -e "PASSWORD=$PASSWORD" -v $EXT_PROJECTS_FOLDER:$INT_PROJECTS_FOLDER -v $EXT_SETTINGS_FOLDER:$INT_SETTINGS_FOLDER nicholasbrandt/texman
 fi
 
 podman restart $CONTAINER_NAME
