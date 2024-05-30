@@ -6,8 +6,20 @@ depend() {
 
 start() {
     echo "starting texman..."
-    # important to start as $USER / rootless
-    su $command_user -c "$command $command_args"
+    max_attempts=30
+    interval=1
+    attempt=1
+    while [ $attempt -le $max_attempts ]; do
+        # call run-podman.sh
+        # important to start as $USER / rootless
+        su $command_user -c "$command $command_args"
+        if [ $? -eq 0 ]; then
+            exit 0
+        fi
+        echo "Attempt $attempt failed. Retrying..."
+        sleep $interval
+        attempt=$((attempt + 1))
+    done
 }
 
 stop() {
