@@ -13,7 +13,7 @@ start() {
 stop() {
     echo "stopping texman..."
     # important to stop as $USER / rootless
-    su -c $command_user -c "podman stop tex_container"
+    su $command_user -c "podman stop tex_container"
     echo "stopped texman"
 }
 
